@@ -25,41 +25,86 @@ public:
 	template<class Type>friend bool operator == (List<Type>&, List<Type>&);
 	void operator < (List);
 	Type operator [] (int);
+
+	
+
+	void showData()
+	{
+		List *q = head;
+		while (q)
+		{
+			Type temp = q->number;
+			cout << temp.getData() << endl;
+			q = q->next;
+		}
+		cout << endl;
+	}
+};
+
+class Object
+{
+private:
+	char* data;
+public:
+	Object()
+	{
+		data = "";
+	}
+	Object(char* d)
+	{
+		data = d;
+	}
+	void setData(char *d)
+	{
+		data = d;
+	}
+	char* getData()
+	{
+		return data;
+	}
+	void print()
+	{
+		cout << data << " ";
+	}
 };
 
 template<class Type>
-void delete_from_list(List<Type> *list, Type del)
+void delete_from_list(List<Type> *list, List<Type> *del_list)
 {
-
-	List<Type> * temp = list->head;
-	List<Type> * tempNext = temp->next;
-	if (temp->number != del)
+	List<Type> * temp_del = del_list->head;
+	while (temp_del)
 	{
-		while (tempNext)
+		List<Type> * temp = list->head;
+		List<Type> * tempNext = temp->next;
+		if (temp->number != temp_del->number)
 		{
-			if (tempNext->number == del)
+			while (tempNext)
 			{
-				temp->next = tempNext->next;
-				List<Type> *del_element = tempNext;
-				tempNext = tempNext->next;
+				if (tempNext->number == temp_del->number)
+				{
+					temp->next = tempNext->next;
+					List<Type> *del_element = tempNext;
+					tempNext = tempNext->next;
 
-				delete del_element;
+					delete del_element;
 
-			}
-			else
-			{
-				temp = temp->next;
-				tempNext = tempNext->next;
+				}
+				else
+				{
+					temp = temp->next;
+					tempNext = tempNext->next;
+				}
 			}
 		}
-	}
-	else
-	{
-		list->head = tempNext;
-		List<Type> *del_element = temp;
-		temp = tempNext;
-		tempNext = tempNext->next;
-		delete del_element;
+		else
+		{
+			list->head = tempNext;
+			List<Type> *del_element = temp;
+			temp = tempNext;
+			tempNext = tempNext->next;
+			delete del_element;
+		}
+		temp_del = temp_del->next;
 	}
 }
 
@@ -235,10 +280,13 @@ int main()
 		list2.Add(p);
 	}
 
-
+	List<int> list_for_del;
+	list_for_del.Add(2);
+	list_for_del.Add(4);
+	list_for_del.Add(6);
 
 	cout << "--------------------------Delete element 4 from List 1----------------------------" << endl;
-	delete_from_list(&list1, 4);
+	delete_from_list(&list1, &list_for_del);
 
 	cout << "--------------------------List 1----------------------------" << endl;
 	list1.Show();
@@ -293,9 +341,13 @@ int main()
 		list2_d.Add(p_d);
 	}
 
+	List<double> list_for_del_d;
+	list_for_del_d.Add(2.2);
+	list_for_del_d.Add(4.4);
+	list_for_del_d.Add(6.6);
 
-	cout << "--------------------------Delete element 4.1 from List 1----------------------------" << endl;
-	delete_from_list(&list1_d, 4.1);
+	cout << "--------------------------Delete element (2.2 4.4 6.6) from List 1----------------------------" << endl;
+	delete_from_list(&list1_d, &list_for_del_d);
 	cout << "--------------------------List 1----------------------------" << endl;
 	list1_d.Show();
 
@@ -315,6 +367,15 @@ int main()
 	cout << "--------------------------List 1 < List 2----------------------------" << endl;
 	list1_d < list2_d;// в первый список загружаютс€ элементы второго
 	list1_d.Show();
+	cout << "--------------------------Work with class Object----------------------------" << endl;
+
+
+	List<Object> d;
+	d.Add("data1");
+	d.Add("data2");
+	d.Add("data3");
+	cout << "List D: " << endl;
+	d.showData();
 
 	system("pause");
 	return 0;
